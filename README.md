@@ -37,47 +37,41 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
+#### options.wrapItInIIFE
+Type: `Boolean`
+Default value: `true`
+
+True if you want to wrap the scripts in an IIFE.
+
+#### options.namespace
 Type: `String`
-Default value: `',  '`
+Default value: `TEST`
 
-A string value that is used to do something with whatever.
+Name of namespace which is used if the scripts are wrapped in an IIFE.
 
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
+#### options.iifeArgs
+Type: `String[]`
+Default value: `[]`
 
-A string value that is used to do something else with whatever else.
+All arguments which will be passed to the IIFE.
+
 
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+In this example, we load an html page, get all script tags, extract the content, wrap it in an IIFE and create a new file merged.js`
 
 ```js
 grunt.initConfig({
   dependency_concat: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
+   options: {
+    namespace: "TEST",
+    wrapItInIIFE: true,
+    iifeArgs: ["jQuery"]
   },
-});
-```
-
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
-
-```js
-grunt.initConfig({
-  dependency_concat: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
+  files: {
+    'test/expected/merged.js': ['test/fixtures/dependency_concat_test.html']
+  }
   },
 });
 ```
@@ -86,4 +80,4 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+13.06.2017 First Commit

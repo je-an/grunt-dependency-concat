@@ -8,7 +8,7 @@
 
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
   // Project configuration.
   grunt.initConfig({
@@ -32,18 +32,12 @@ module.exports = function(grunt) {
     dependency_concat: {
       default_options: {
         options: {
+          namespace: "TEST",
+          wrapItInIIFE: true,
+          iifeArgs: ["jQuery"]
         },
         files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']
-        }
-      },
-      custom_options: {
-        options: {
-          separator: ': ',
-          punctuation: ' !!!'
-        },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
+          'test/expected/merged.js': ['test/fixtures/dependency_concat_test.html']
         }
       }
     },
@@ -65,7 +59,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'dependency_concat', 'nodeunit']);
+  grunt.registerTask('test', ['clean', 'dependency_concat', /*'nodeunit'*/]);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);

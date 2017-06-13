@@ -8,43 +8,53 @@
 
 'use strict';
 
-module.exports = function(grunt) {
-
+module.exports = function (grunt) {
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
 
-  grunt.registerMultiTask('dependency_concat', 'Concat all js scripts which are referenced in a html file', function() {
+  var cheerio = require("cheerio");
+  var fs = require("fs");
+
+  grunt.registerMultiTask('dependency_concat', 'Concat all js scripts which are referenced in a html file', function () {
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
-      punctuation: '.',
-      separator: ', '
-    });
+      namespace: "APPLICATION",
+      wrapItInIIFE: true,
+      iifeArgs: []
+    }),
+      args = (function () {
+        var length = options.iifeArgs.length, params = "";
+        if (length > 0) {
+          for (var i = 0; i < length; i++) {
+            var arg = options.iifeArgs[i];
+            params = params + arg + ",";
+          }
+          params = params.replace(/.$/, "");
+        }
+        return params;
+      })(),
+      header = "var " + options.namespace + " = (function (" + args + ") {  \n var " + options.namespace + " = {}; \n",
+      footer = "\n return " + options.namespace + "; \n })(" + args + ");",
+      scripts = "";
 
     // Iterate over all specified file groups.
-    this.files.forEach(function(f) {
-      // Concat specified files.
-      var src = f.src.filter(function(filepath) {
-        // Warn on and remove invalid source files (if nonull was set).
-        if (!grunt.file.exists(filepath)) {
-          grunt.log.warn('Source file "' + filepath + '" not found.');
-          return false;
-        } else {
-          return true;
-        }
-      }).map(function(filepath) {
-        // Read file source.
-        return grunt.file.read(filepath);
-      }).join(grunt.util.normalizelf(options.separator));
+    this.files.forEach(function (f) {
+      var filepath = f.src[0], content, $;
+      if (fs.existsSync(filepath)) {
+        content = grunt.file.read(filepath);
+        $ = cheerio.load(content, { decodeEntities: false });
 
-      // Handle options.
-      src += options.punctuation;
+        // get content of all scripts and concat it
+        $("script").each(function () {
+          var text = $(this).attr("src");
+          var file = fs.readFileSync(text, "utf8");
+          scripts = scripts + file + "\n";
+        });
 
-      // Write the destination file.
-      grunt.file.write(f.dest, src);
-
-      // Print a success message.
-      grunt.log.writeln('File "' + f.dest + '" created.');
+        // create new file with the content of all script files
+        fs.writeFileSync(f.dest, options.wrapItInIIFE ? (header + scripts + footer) : scripts, 'utf8');
+        grunt.log.writeln('File "' + f.dest + '" created.');
+      }
     });
   });
-
 };
