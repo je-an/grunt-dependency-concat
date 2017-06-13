@@ -1,0 +1,38 @@
+{
+  "name": "grunt-dependency-concat",
+  "description": "Concat all js scripts which are referenced in a html file",
+  "version": "0.1.0",
+  "homepage": "https://github.com/je-an/grunt-dependency-concat",
+  "author": {
+    "name": "je-an",
+    "email": "mail@jeremiasandris.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/je-an/grunt-dependency-concat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/je-an/grunt-dependency-concat/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/je-an/grunt-dependency-concat/blob/master/LICENSE-MIT"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "^0.9.2",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-nodeunit": "^0.3.3",
+    "grunt": "~0.4.5"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
